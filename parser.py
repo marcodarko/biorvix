@@ -44,7 +44,12 @@ def load_annotations():
                 if full_name is not None:
                     author["name"] = full_name
                     author["givenName"] = full_name.split(' ', 1)[0]
-                    author["familyName"] = full_name.split(' ',1)[1]
+                    try:
+                        author["familyName"] = full_name.split(' ',1)[1]
+                    except:
+                        self.logger.info("No familyName for: '%s'" % rec['rel_doi'])
+                        pass
+
 
                 institutions = auth.get("author_inst", None)
                 if institutions is not None:
