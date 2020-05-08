@@ -31,13 +31,13 @@ def load_annotations():
 
         name = rec.get("rel_site", "")
         if name and name =='biorxiv':
-            website['name'] = full_name
+            website['name'] = name
             website['url'] = "https://www.biorxiv.org/"
         elif name and name =='medrxiv':
-            website['name'] = full_name
+            website['name'] = name
             website['url'] = "https://www.medrxiv.org/"
         else:
-            website['name'] = full_name
+            website['name'] = name
             website['url'] = rec.get("rel_link", "")
 
         publication["curatedBy"] = website
