@@ -22,8 +22,8 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
     storage_class = biothings.hub.dataload.storage.BasicStorage
 
     def load_data(self, data_folder):
-        self.logger.info("Load data from directory: '%s'" % data_folder)
-        return parser_func(data_folder)
+        self.logger.info("No data to load from file for biorxiv")
+        return parser_func()
 
     @classmethod
     def get_mapping(klass):
