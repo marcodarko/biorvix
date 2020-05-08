@@ -3,6 +3,9 @@ import json
 import requests
 from dateutil import parser
 
+from biothings import config
+logging = config.logger
+
 def load_annotations():
     r = requests.get('https://connect.biorxiv.org/relate/collection_json.php?grp=181')
     if r.status_code == 200:
@@ -21,11 +24,27 @@ def load_annotations():
             "isBasedOn":[]
         }
         publication["_id"] = rec['rel_doi'].split('/', 1)[-1]
-        publication["curatedBy"] = {"@type":"schema:WebSite",
-                                    "name": rec.get("rel_site", ""),
-                                    "url": rec.get("rel_link", "")
-                                   }
+        publication["doi"] = rec.get("rel_doi", None)
+        publication["url"] = rec.get("rel_link", None)
+
+        website = {"@type":"schema:WebSite"}
+
+        name = rec.get("rel_site", "")
+        if name and name =='biorxiv':
+            website['name'] = full_name
+            website['url'] = "https://www.biorxiv.org/"
+        elif name and name =='medrxiv':
+            website['name'] = full_name
+            website['url'] = "https://www.medrxiv.org/"
+        else:
+            website['name'] = full_name
+            website['url'] = rec.get("rel_link", "")
+
+        publication["curatedBy"] = website
+
         publication["name"] = rec.get("rel_title", None)
+        publication["journalName"] = rec.get("rel_title", None)
+        publication["journalNameAbbreviation"] = rec.get("rel_title", None)
         publication["abstract"] = rec.get("rel_abs", None)
         publication["identifier"] = rec['rel_doi'].split('/', 1)[-1]
 
@@ -47,7 +66,7 @@ def load_annotations():
                     try:
                         author["familyName"] = full_name.split(' ',1)[1]
                     except:
-                        self.logger.info("No familyName for: '%s'" % rec['rel_doi'])
+                        logging.info("No familyName for: '%s'" % rec['rel_doi'])
                         pass
 
 
