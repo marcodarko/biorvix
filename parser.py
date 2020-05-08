@@ -7,8 +7,7 @@ def load_annotations():
     r = requests.get('https://connect.biorxiv.org/relate/collection_json.php?grp=181')
     if r.status_code == 200:
         data = json.loads(r.text)
-        print(len(data['rels']))
-    for rec in data['rels'][:10]:
+    for rec in data['rels']:
         publication={
             "@context": {
                 "schema":"http://schema.org/",
