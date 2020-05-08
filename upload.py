@@ -15,6 +15,7 @@ except ImportError:
 
 class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
 
+    main_source="biorxiv"
     name = "biorxiv"
     __metadata__ = {"src_meta": {}}
     idconverter = None
