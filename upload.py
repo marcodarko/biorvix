@@ -15,7 +15,7 @@ except ImportError:
 
 class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
 
-    # main_source="biorxiv"
+    main_source="biorxiv"
     name = "biorxiv"
     __metadata__ = {"src_meta": {}}
     idconverter = None
@@ -28,13 +28,14 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
     @classmethod
     def get_mapping(klass):
         return {
+            "@type": {
+                "normalizer": "keyword_lowercase_normalizer",
+                "type": "keyword"
+            },
             'fields': {
                 'type': 'text'
             },
             'abstract': {
-                'type': 'text'
-            },
-            '@type': {
                 'type': 'text'
             },
             'pmid': {
