@@ -28,17 +28,9 @@ def load_annotations():
         publication["url"] = rec.get("rel_link", None)
 
         website = {"@type":"schema:WebSite"}
-
         name = rec.get("rel_site", "")
-        if name and name =='biorxiv':
-            website['name'] = name
-            website['url'] = "https://www.biorxiv.org/"
-        elif name and name =='medrxiv':
-            website['name'] = name
-            website['url'] = "https://www.medrxiv.org/"
-        else:
-            website['name'] = name
-            website['url'] = rec.get("rel_link", "")
+        website['name'] = name
+        website['url'] = rec.get("rel_link", "")
 
         publication["curatedBy"] = website
 
@@ -79,7 +71,7 @@ def load_annotations():
                         author["affiliation"].append(organization)
                 for key in author:
                     if author[key] is None: del author[key]
-            publication["author"].append(author)
+                publication["author"].append(author)
 
         #cleanup doc of empty vals
         for key in list(publication):

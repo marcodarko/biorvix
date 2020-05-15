@@ -17,7 +17,20 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
 
     main_source="biorxiv"
     name = "biorxiv"
-    __metadata__ = {"src_meta": {}}
+    __metadata__ = {
+        "src_meta": {
+            "author":{
+                "name": "Marco Cano",
+                "url": "https://github.com/marcodarko"
+            },
+            "code":{
+                "branch": "master",
+                "repo": "https://github.com/marcodarko/biorxiv.git"
+            },
+            "url": "https://www.ncbi.nlm.nih.gov/research/coronavirus/ ",
+            "license": "https://www.ncbi.nlm.nih.gov/home/about/policies/"
+        }
+    }
     idconverter = None
     storage_class = biothings.hub.dataload.storage.BasicStorage
 
