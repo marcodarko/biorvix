@@ -1,10 +1,13 @@
 import biothings.hub.dataload.uploader
 import os
 
+import requests
 import biothings
 import config
 biothings.config_for_app(config)
 
+MAP_URL = "https://raw.githubusercontent.com/SuLab/outbreak.info-resources/master/outbreak_resources_es_mapping.json"
+MAP_VARS = ["@type", "abstract", "author", "citedBy", "curatedBy", "dateModified", "datePublished", "doi", "funding", "identifier", "isBasedOn", "issueNumber", "journalName", "journalNameAbbrev", "keywords", "license", "name", "pmid", "publicationType", "relatedTo", "url", "volumeNumber"]
 
 # when code is exported, import becomes relative
 try:
@@ -40,150 +43,8 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
 
     @classmethod
     def get_mapping(klass):
-        return {
-            "@type": {
-                "normalizer": "keyword_lowercase_normalizer",
-                "type": "keyword"
-            },
-            'fields': {
-                'type': 'text'
-            },
-            'abstract': {
-                'type': 'text'
-            },
-            'pmid': {
-                'type': 'integer'
-            },
-            'author': {
-                'properties': {
-                    'name': {
-                        'type': 'text'
-                    },
-                    'givenName': {
-                        'type': 'text'
-                    },
-                    'familyName': {
-                        'type': 'text'
-                    },
-                    'affiliation': {
-                        'properties': {
-                            'name': {
-                                'type': 'text'
-                            }
-                        }
-                    }
-                }
-            },
-            "isBasedOn": {
-                "properties": {
-                    "@type": {
-                        "normalizer": "keyword_lowercase_normalizer",
-                        "type": "keyword"
-                    },
-                    "identifier": {
-                        "type": "text"
-                    },
-                    "name": {
-                        "type": "text"
-                    },
-                    "description": {
-                        "type": "text"
-                    },
-                    "url": {
-                        "type": "text"
-                    },
-                    "datePublished": {
-                        "type": "text"
-                    }
-                }
-            },
-            "relatedTo": {
-                "properties": {
-                    "@type": {
-                        "normalizer": "keyword_lowercase_normalizer",
-                        "type": "keyword"
-                    },
-                    "identifier": {
-                        "type": "text"
-                    },
-                    "pmid": {
-                        "type": "text"
-                    },
-                    "url": {
-                        "type": "text"
-                    },
-                    "citation": {
-                        "type": "text"
-                    }
-                }
-            },
-            'funding': {
-                'properties': {
-                    'funder': {
-                        'properties': {
-                            'name': {
-                                'type': 'text'
-                            }
-                        }
-                    },
-                    'identifier': {
-                        'type': 'text'
-                    }
-                }
-            },
-            'license': {
-                'type': 'text'
-            },
-            'keywords': {
-                'normalizer': 'keyword_lowercase_normalizer',
-                'type': 'keyword',
-                        'copy_to': ['all']
-            },
-            'publicationType': {
-                'normalizer': 'keyword_lowercase_normalizer',
-                'type': 'keyword',
-                        'copy_to': ['all']
-            },
-            'name': {
-                'type': 'text'
-            },
-            'journalName': {
-                'type': 'text'
-            },
-            'identifier': {
-                'type': 'text'
-            },
-            'doi': {
-                'type': 'text'
-            },
-            'datePublished': {
-                'type': 'keyword'
-            },
-            'dateModified': {
-                'type': 'keyword'
-            },
-            'issueNumber': {
-                'type': 'text'
-            },
-            'volumeNumber': {
-                'type': 'text'
-            },
-            "curatedBy": {
-                "properties": {
-                    "@type": {
-                        "normalizer": "keyword_lowercase_normalizer",
-                        "type": "keyword"
-                    },
-                    "name": {
-                        "type": "text"
-                    },
-                    "url": {
-                        "type": "text"
-                    },
-                    "versionDate": {
-                        "normalizer": "keyword_lowercase_normalizer",
-                        "type": "keyword"
-                    },
-                }
-            },
-        }
+        r = requests.get(MAP_URL)
+        if(r.status_code == 200):
+            mapping = r.json()
+            mapping_dict = { key: mapping[key] for key in MAP_VARS }
+            return mapping_dict
