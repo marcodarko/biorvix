@@ -20,7 +20,6 @@ def load_annotations():
             "keywords":[],
             "author":[],
             "funding":[],
-            "publicationType":[],
             "isBasedOn":[]
         }
         publication["_id"] = rec['rel_doi'].split('/', 1)[-1]
@@ -33,7 +32,7 @@ def load_annotations():
         website['url'] = rec.get("rel_link", "")
 
         publication["curatedBy"] = website
-
+        publication["publicationType"] = "Preprint"
         publication["name"] = rec.get("rel_title", None)
         publication["journalName"] = rec.get("rel_title", None)
         publication["journalNameAbbreviation"] = rec.get("rel_title", None)
