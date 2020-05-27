@@ -32,7 +32,7 @@ def load_annotations():
         website['url'] = rec.get("rel_link", "")
 
         publication["curatedBy"] = website
-        publication["publicationType"] = "Preprint"
+        publication["publicationType"] = ["Preprint"]
         publication["name"] = rec.get("rel_title", None)
         publication["journalName"] = rec.get("rel_site", None)
         publication["journalNameAbbreviation"] = rec.get("rel_title", None)
