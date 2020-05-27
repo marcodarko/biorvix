@@ -2,6 +2,7 @@ import json
 
 import requests
 from dateutil import parser
+from datetime import date
 
 from biothings import config
 logging = config.logger
@@ -26,7 +27,7 @@ def load_annotations():
         publication["doi"] = rec.get("rel_doi", None)
         publication["url"] = rec.get("rel_link", None)
 
-        website = {"@type":"schema:WebSite"}
+        website = {"@type":"schema:WebSite", "curationDate": date.today().strftime("%Y-%m-%d")}
         name = rec.get("rel_site", "")
         website['name'] = name
         website['url'] = rec.get("rel_link", "")
