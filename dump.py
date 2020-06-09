@@ -20,8 +20,8 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
                 "branch": "master",
                 "repo": "https://github.com/marcodarko/biorxiv.git"
             },
-            "url": "https://www.ncbi.nlm.nih.gov/research/coronavirus/ ",
-            "license": "https://www.ncbi.nlm.nih.gov/home/about/policies/"
+            "url": "https://connect.biorxiv.org/relate/content/181",
+            "license": "https://www.biorxiv.org/about-biorxiv"
         }
     }
     # override in subclass accordingly
