@@ -36,7 +36,7 @@ def load_annotations():
         publication["publicationType"] = ["Preprint"]
         publication["name"] = rec.get("rel_title", None)
         publication["journalName"] = rec.get("rel_site", None)
-        publication["journalNameAbbreviation"] = rec.get("rel_title", None)
+        publication["journalNameAbbreviation"] = rec.get("rel_site", None)
         publication["abstract"] = rec.get("rel_abs", None)
         publication["identifier"] = rec['rel_doi'].split('/', 1)[-1]
 
