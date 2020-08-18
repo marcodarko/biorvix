@@ -46,8 +46,9 @@ def parse_item(rec):
         dp = d.strftime("%Y-%m-%d")
         publication["datePublished"] = dp
 
-    authors = rec.get("rel_authors", [])
-    if len(authors):
+    authors = rec.get("rel_authors")
+
+    if authors and len(authors):
         for auth in authors:
             author = {"@type":"outbreak:Person"}
 
@@ -81,8 +82,8 @@ def parse_item(rec):
 
 def fetch_data():
     data_url       = "https://api.biorxiv.org/covid19/{cursor}/json"
-    cursor         = 0
-    collected_dois = set()
+    cursor         = 7000
+    collected_dois = set([None])
 
     data_request = requests.get(data_url.format(cursor=cursor))
 
@@ -104,8 +105,9 @@ def fetch_data():
         cursor += 30
         data_request = requests.get(data_url.format(cursor=cursor))
         data_json    = data_request.json()
-        new_total    = data_json['messages'][0]['total']
-        if new_total != total:
+
+        new_total    = data_json['messages'][0].get('total')
+        if new_total and new_total != total:
             # Possible to handle by finding the difference here
             raise Exception("Change of totals while running!") 
 
@@ -114,3 +116,17 @@ def load_annotations():
     for rec in fetch_data():
         publication = parse_item(rec)
         yield publication
+
+if __name__ == '__main__':
+    import sys
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    root.addHandler(handler)
+    logging = root
+
+    m = [i for i in load_annotations()]
+    logging.info("created it with", len(m), m[::500])
