@@ -88,15 +88,15 @@ def fetch_data():
     data_request = requests.get(data_url.format(cursor=cursor))
 
     try:
-        data_json = data_request.json()
-        total     = data_json['messages'][0]['total']
+        data_json  = data_request.json()
+        total      = data_json['messages'][0]['total']
+        collection = data_json['collection']
     except:
         logging.warning("Biorxiv API down")
         raise StopIteration
 
-    while cursor < total:
+    while len(collection) > 0:
         logging.info(f"getting {cursor}")
-        collection = data_json['collection']
         for result in collection:
             if result.get('rel_doi') not in collected_dois:
                 yield result
@@ -105,12 +105,11 @@ def fetch_data():
         cursor += 30
         data_request = requests.get(data_url.format(cursor=cursor))
         data_json    = data_request.json()
+        collection   = data_json['collection']
+        new_total    = data_json['messages'][0].get('total') or new_total
 
-        new_total    = data_json['messages'][0].get('total')
-        if new_total and new_total != total:
-            # Possible to handle by finding the difference here
-            raise Exception("Change of totals while running!") 
-
+    collected_dois.remove(None)
+    logging.info(f"initial total {total}, latest total {new_total}, actually collected {len(collected_dois)}")
 
 def load_annotations():
     for rec in fetch_data():
@@ -127,6 +126,4 @@ if __name__ == '__main__':
     handler.setFormatter(formatter)
     root.addHandler(handler)
     logging = root
-
-    m = [i for i in load_annotations()]
-    logging.info("created it with", len(m), m[::500])
+    (i for i in load_annotations())
