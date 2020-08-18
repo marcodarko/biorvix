@@ -82,7 +82,7 @@ def parse_item(rec):
 
 def fetch_data():
     data_url       = "https://api.biorxiv.org/covid19/{cursor}/json"
-    cursor         = 7000
+    cursor         = 0
     collected_dois = set([None])
 
     data_request = requests.get(data_url.format(cursor=cursor))
