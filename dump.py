@@ -18,13 +18,16 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
             },
             "code":{
                 "branch": "master",
-                "repo": "https://github.com/marcodarko/biorxiv.git"
+                "repo": "https://github.com/outbreak-info/biorxiv.git"
             },
-            "url": "https://connect.biorxiv.org/relate/content/181",
+            "url": "https://api.biorxiv.org/covid19/help",
             "license": "https://www.biorxiv.org/about-biorxiv"
         }
     }
     # override in subclass accordingly
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     
-    SCHEDULE = "15 7 * * *"  # daily at 14:15UTC/7:15PT
+    SCHEDULE = "15 7 * * *"  # daily at 7:15PT
+
+    def set_release(self):
+        self.release = datetime.now().strftime('%Y-%m-%d-%H%M')
