@@ -31,4 +31,4 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
     SCHEDULE = "15 7 * * *"  # daily at 7:15PT
 
     def set_release(self):
-        self.release = datetime.now().strftime('%Y-%m-%d-%H%M')
+        self.release = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M')
