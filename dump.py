@@ -35,5 +35,4 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
         self.set_release()
 
     def set_release(self):
-        self.release = 'THIS-works'
-        #self.release = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M')
+        self.release = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M')
