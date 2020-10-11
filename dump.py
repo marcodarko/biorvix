@@ -30,6 +30,10 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
     
     SCHEDULE = "15 7 * * *"  # daily at 7:15PT
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.set_release()
+
     def set_release(self):
         self.release = 'THIS-works'
         #self.release = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M')
