@@ -4,6 +4,7 @@ import time
 import requests
 from dateutil import parser
 from datetime import date
+from src.append_misc_meta import *
 
 try:
     from biothings import config
@@ -114,6 +115,7 @@ def fetch_data():
 def load_annotations():
     for rec in fetch_data():
         publication = parse_item(rec)
+        publication = add_anns(publication)
         yield publication
 
 if __name__ == '__main__':
