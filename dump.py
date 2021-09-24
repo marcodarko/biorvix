@@ -19,7 +19,7 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
             },
             "code":{
                 "branch": "annotations",
-                "repo": "https://github.com/gtsueng/biorxiv.git"
+                "repo": "https://github.com/outbreak-info/biorxiv.git"
             },
             "url": "https://api.biorxiv.org/covid19/help",
             "license": "https://www.biorxiv.org/about-biorxiv"

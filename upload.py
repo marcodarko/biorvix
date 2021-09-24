@@ -28,7 +28,7 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
             },
             "code":{
                 "branch": "annotations",
-                "repo": "https://github.com/gtsueng/biorxiv.git"
+                "repo": "https://github.com/outbreak-info/biorxiv.git"
             },
             "url": "https://connect.biorxiv.org/relate/content/181",
             "license": "https://www.biorxiv.org/about-biorxiv"
