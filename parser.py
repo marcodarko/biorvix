@@ -113,9 +113,10 @@ def fetch_data():
     logging.info(f"initial total {total}, latest total {new_total}, actually collected {len(collected_dois)}")
 
 def load_annotations():
+    path_dict = fetch_path_dict()
     for rec in fetch_data():
-        publication = parse_item(rec)
-        publication = add_anns(publication)
+        publication_rec = parse_item(rec)
+        publication = add_anns(path_dict,publication_rec)
         yield publication
 
 if __name__ == '__main__':
