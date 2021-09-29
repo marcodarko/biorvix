@@ -4,7 +4,7 @@ import time
 import requests
 from dateutil import parser
 from datetime import date
-from src.append_misc_meta import *
+from append_misc_meta import *
 
 try:
     from biothings import config
