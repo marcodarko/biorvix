@@ -18,7 +18,7 @@ class BiorxivDumper(biothings.hub.dataload.dumper.DummyDumper):
                 "url": "https://github.com/marcodarko"
             },
             "code":{
-                "branch": "annotations",
+                "branch": "master",
                 "repo": "https://github.com/outbreak-info/biorxiv.git"
             },
             "url": "https://api.biorxiv.org/covid19/help",
