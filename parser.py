@@ -4,6 +4,14 @@ import time
 import requests
 from dateutil import parser
 from datetime import date
+import pathlib
+
+script_path = pathlib.Path(__file__).parent.absolute()
+with open(scriptpath+'append_misc_meta.py','w+') as appendfile:
+    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/main/append_misc_meta.py')
+    appendfile.write(r.text)
+    appendfile.close()
+
 from append_misc_meta import *
 
 try:
