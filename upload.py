@@ -27,7 +27,7 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
                 "url": "https://github.com/marcodarko"
             },
             "code":{
-                "branch": "annotations",
+                "branch": "master",
                 "repo": "https://github.com/outbreak-info/biorxiv.git"
             },
             "url": "https://connect.biorxiv.org/relate/content/181",

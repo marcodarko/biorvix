@@ -1,5 +1,6 @@
 import json
 import time
+import os
 
 import requests
 from dateutil import parser
@@ -14,11 +15,13 @@ with open(scriptpath+'append_misc_meta.py','w+') as appendfile:
 
 from append_misc_meta import *
 
+
 try:
     from biothings import config
     logging = config.logger
 except ImportError:
     import logging
+
 
 def parse_item(rec):
     publication={
