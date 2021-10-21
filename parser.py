@@ -9,11 +9,17 @@ import pathlib
 
 script_path = pathlib.Path(__file__).parent.absolute()
 with open(scriptpath+'append_misc_meta.py','w+') as appendfile:
-    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/main/append_misc_meta.py')
+    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/append_altmetrics/append_misc_meta.py')
     appendfile.write(r.text)
     appendfile.close()
 
+with open(scriptpath+'append_altmetrics.py','w+') as altfile:
+    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/append_altmetrics/append_altmetrics.py')
+    altfile.write(r.text)
+    altfile.close()    
+
 from append_misc_meta import *
+from append_altmetrics import *
 
 
 try:
@@ -128,8 +134,18 @@ def load_annotations():
     for rec in fetch_data():
         publication_rec = parse_item(rec)
         publication = add_anns(path_dict,publication_rec)
+        doi = publication['doi']
+        altmetric_dict = get_altmetrics_update(script_path,doi)
+        try:
+            evaluationslist = publication['evaluations']
+        except:
+            evaluationslist = []
+        evaluationslist.append(altmetric_dict)
+        publication['evaluations']=evaluationslist
         yield publication
-
+       
+        
+        
 if __name__ == '__main__':
     import sys
     root = logging.getLogger()
