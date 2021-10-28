@@ -8,12 +8,12 @@ from datetime import date
 import pathlib
 
 script_path = pathlib.Path(__file__).parent.absolute()
-with open(scriptpath+'append_misc_meta.py','w+') as appendfile:
+with open(os.path.join(script_path,'append_misc_meta.py'),'w+') as appendfile:
     r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/append_altmetrics/append_misc_meta.py')
     appendfile.write(r.text)
     appendfile.close()
 
-with open(scriptpath+'append_altmetrics.py','w+') as altfile:
+with open(os.path.join(script_path,'append_altmetrics.py'),'w+') as altfile:
     r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/append_altmetrics/append_altmetrics.py')
     altfile.write(r.text)
     altfile.close()    
