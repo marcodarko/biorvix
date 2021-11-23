@@ -7,14 +7,44 @@ from dateutil import parser
 from datetime import date
 import pathlib
 
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
+DEFAULT_TIMEOUT = 5 # seconds
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    def __init__(self, *args, **kwargs):
+        self.timeout = DEFAULT_TIMEOUT
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
+
+## Set time outs, backoff, retries
+httprequests = requests.Session()
+retry_strategy = Retry(
+    total=3,
+    backoff_factor=1,
+    status_forcelist=[429, 500, 502, 503, 504],
+    method_whitelist=["HEAD", "GET", "OPTIONS"]
+)
+adapter = TimeoutHTTPAdapter(timeout=2.5,max_retries=retry_strategy)
+httprequests.mount("https://", adapter)
+httprequests.mount("http://", adapter)    
+    
 script_path = pathlib.Path(__file__).parent.absolute()
 with open(os.path.join(script_path,'append_misc_meta.py'),'w+') as appendfile:
-    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/main/append_misc_meta.py')
+    r = httprequests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/main/append_misc_meta.py')
     appendfile.write(r.text)
     appendfile.close()
 
 from append_misc_meta import *
-
 
 try:
     from biothings import config
@@ -97,7 +127,7 @@ def fetch_data():
     cursor         = 0
     collected_dois = set([None])
 
-    data_request = requests.get(data_url.format(cursor=cursor))
+    data_request = httprequests.get(data_url.format(cursor=cursor))
 
     try:
         data_json  = data_request.json()
@@ -115,7 +145,7 @@ def fetch_data():
         collected_dois |= set(r.get('rel_doi') for r in collection)
 
         cursor += 30
-        data_request = requests.get(data_url.format(cursor=cursor))
+        data_request = httprequests.get(data_url.format(cursor=cursor))
         data_json    = data_request.json()
         collection   = data_json['collection']
         new_total    = data_json['messages'][0].get('total') or new_total
