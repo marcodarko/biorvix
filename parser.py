@@ -1,15 +1,27 @@
 import json
 import time
+import os
 
 import requests
 from dateutil import parser
 from datetime import date
+import pathlib
+
+script_path = pathlib.Path(__file__).parent.absolute()
+with open(os.path.join(script_path,'append_misc_meta.py'),'w+') as appendfile:
+    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/main/append_misc_meta.py')
+    appendfile.write(r.text)
+    appendfile.close()
+
+from append_misc_meta import *
+
 
 try:
     from biothings import config
     logging = config.logger
 except ImportError:
     import logging
+
 
 def parse_item(rec):
     publication={
@@ -112,8 +124,10 @@ def fetch_data():
     logging.info(f"initial total {total}, latest total {new_total}, actually collected {len(collected_dois)}")
 
 def load_annotations():
+    path_dict = fetch_path_dict()
     for rec in fetch_data():
-        publication = parse_item(rec)
+        publication_rec = parse_item(rec)
+        publication = add_anns(path_dict,publication_rec)
         yield publication
 
 if __name__ == '__main__':
