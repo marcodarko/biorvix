@@ -2,25 +2,13 @@ import json
 import time
 import os
 
-import requests
+from outbreak_parser_tools import safe_request as requests
+from outbreak_parser_tools.logger import get_logger
+from outbreak_parser_tools.addendum import Addendum
+logger = get_logger('biorxiv')
 from dateutil import parser
 from datetime import date
 import pathlib
-
-script_path = pathlib.Path(__file__).parent.absolute()
-with open(os.path.join(script_path,'append_misc_meta.py'),'w+') as appendfile:
-    r = requests.get('https://raw.githubusercontent.com/gtsueng/outbreak_misc_meta/main/append_misc_meta.py')
-    appendfile.write(r.text)
-    appendfile.close()
-
-from append_misc_meta import *
-
-
-try:
-    from biothings import config
-    logging = config.logger
-except ImportError:
-    import logging
 
 
 def parse_item(rec):
@@ -71,7 +59,7 @@ def parse_item(rec):
                 try:
                     author["familyName"] = full_name.split(' ',1)[1]
                 except:
-                    logging.info("No familyName for: '%s'" % rec['rel_doi'])
+                    logger.info("No familyName for: '%s'" % rec['rel_doi'])
                     pass
 
 
@@ -104,11 +92,11 @@ def fetch_data():
         total      = data_json['messages'][0]['total']
         collection = data_json['collection']
     except:
-        logging.warning("Biorxiv API down")
+        logger.warning("Biorxiv API down")
         raise StopIteration
 
     while len(collection) > 0:
-        logging.info(f"getting {cursor}")
+        logger.info(f"getting {cursor}")
         for result in collection:
             if result.get('rel_doi') not in collected_dois:
                 yield result
@@ -121,23 +109,15 @@ def fetch_data():
         new_total    = data_json['messages'][0].get('total') or new_total
 
     collected_dois.remove(None)
-    logging.info(f"initial total {total}, latest total {new_total}, actually collected {len(collected_dois)}")
+    logger.info(f"initial total {total}, latest total {new_total}, actually collected {len(collected_dois)}")
 
+import pickle
 def load_annotations():
-    path_dict = fetch_path_dict()
-    for rec in fetch_data():
-        publication_rec = parse_item(rec)
-        publication = add_anns(path_dict,publication_rec)
-        yield publication
+    #pubs = [parse_item(rec) for rec in fetch_data()]
+    pubs = pickle.load(open('outp.p', 'rb'))
+    Addendum.biorxiv_corrector().update(pubs)
+    Addendum.topic_adder().update(pubs)
+    Addendum.altmetric_adder().update(pubs)
 
-if __name__ == '__main__':
-    import sys
-    root = logging.getLogger()
-    root.setLevel(logging.INFO)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    root.addHandler(handler)
-    logging = root
-    (i for i in load_annotations())
+    for publication in pubs:
+        yield publication
