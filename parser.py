@@ -111,10 +111,8 @@ def fetch_data():
     collected_dois.remove(None)
     logger.info(f"initial total {total}, latest total {new_total}, actually collected {len(collected_dois)}")
 
-import pickle
 def load_annotations():
-    #pubs = [parse_item(rec) for rec in fetch_data()]
-    pubs = pickle.load(open('outp.p', 'rb'))
+    pubs = [parse_item(rec) for rec in fetch_data()]
     Addendum.biorxiv_corrector().update(pubs)
     Addendum.topic_adder().update(pubs)
     Addendum.altmetric_adder().update(pubs)
