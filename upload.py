@@ -43,8 +43,7 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
 
     @classmethod
     def get_mapping(klass):
-        r = requests.get(MAP_URL)
-        if(r.status_code == 200):
-            mapping = r.json()
-            mapping_dict = { key: mapping[key] for key in MAP_VARS }
-            return mapping_dict
+        from mapping import get_mapping
+        mapping = get_mapping()
+        mapping_dict = { key: mapping[key] for key in MAP_VARS }
+        return mapping_dict
