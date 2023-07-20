@@ -5,6 +5,7 @@ import requests
 import biothings
 import config
 biothings.config_for_app(config)
+import json
 
 MAP_URL = "https://raw.githubusercontent.com/SuLab/outbreak.info-resources/master/outbreak_resources_es_mapping_v3.json"
 MAP_VARS = ["@type", "abstract", "date", "author", "citedBy", "curatedBy", "dateModified", "datePublished", "doi", "funding", "identifier", "isBasedOn", "issueNumber", "journalName", "journalNameAbbrev", "keywords", "license", "name", "pmid", "publicationType", "isRelatedTo", "url", "volumeNumber","correction","evaluations","topicCategory"]
@@ -43,8 +44,7 @@ class BiorxivUploader(biothings.hub.dataload.uploader.BaseSourceUploader):
 
     @classmethod
     def get_mapping(klass):
-        r = requests.get(MAP_URL)
-        if(r.status_code == 200):
-            mapping = r.json()
-            mapping_dict = { key: mapping[key] for key in MAP_VARS }
-            return mapping_dict
+        with open('/opt/home/outbreak/outbreak.api/plugins/biorxiv/mapping.json', 'r') as mapping_file:
+            mapping = json.load(mapping_file)
+        mapping_dict = { key: mapping[key] for key in MAP_VARS }
+        return mapping_dict
